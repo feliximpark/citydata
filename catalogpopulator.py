@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from catalogDB import Base, Cities, Items, User
 
 # connecting to database
-engine = create_engine('sqlite:///citiesfinal.db')
+engine = create_engine('postgresql://chriss:password@localhost/chriss')
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
@@ -84,11 +84,7 @@ session.add(plaza_mayor)
 
 sophia_cathedrale = Items(name="Saint Sophias's Cathedral", description="""
                           Saint Sophia Cathedral in Kiev is an outstanding
-                          architectural monument of Kievan Rus'. The cathedral
-                          is one of the city's best known landmarks and the
-                          first heritage site in Ukraine to be inscribed on
-                          the World Heritage List along with the Kiev Cave
-                          Monastery complex.""", category_id="7")
+                          architectural monument of Kievan Rus'. """, category_id="7")
 session.add(sophia_cathedrale)
 
 colosseum = Items(name="Colosseum", description="""The Colosseum or Coliseum

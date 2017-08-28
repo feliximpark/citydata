@@ -35,7 +35,7 @@ class Items(Base):
     __tablename__ = 'items'
     id = Column(Integer, primary_key=True)
     name = Column(String(30), nullable=False)
-    description = Column(String(400), nullable=False)
+    description = Column(String(1000), nullable=False)
     category_id = Column(Integer, ForeignKey('cities.id'))
     categories = relationship(Cities)
     user_id = Column(Integer, ForeignKey('user.id'))
@@ -51,6 +51,7 @@ class Items(Base):
                 'title': self.name,
                 }
 
-engine = create_engine('sqlite:///citiesfinal.db')
+engine = create_engine('postgresql://chriss:password@localhost/chriss')
 
 Base.metadata.create_all(engine)
+print("All Done!")

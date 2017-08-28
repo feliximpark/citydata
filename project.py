@@ -12,9 +12,8 @@ import json
 import requests
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
-from functools import wraps
 import httplib2
-
+from functools import wraps
 # importing the google client_secret
 CLIENT_ID = json.loads(
   open('client_secrets.json', 'r').read())['web']['client_id']
@@ -22,18 +21,19 @@ CLIENT_ID = json.loads(
 app = Flask(__name__)
 
 # connecting the file to the database
-engine = create_engine('sqlite:///citiesfinal.db')
+engine = create_engine('postgresql://chriss:password@localhost/chriss')
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
-# creating login decorator used by all CRUD-functions
+# creating a decorator-function to check login-status
+# this decorator is used by all CRUD-functions
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if 'username' not in login_session:
-            return redirect('/login')
+        if "username" not in login_session:
+            return redirect("/login")
         return f(*args, **kwargs)
     return decorated_function
 
@@ -126,7 +126,7 @@ def gconnect():
     user_id = getUserID(login_session['username'])
     if not user_id:
         user_id = createUser(login_session)
-        print ("  user set")
+        print ("New user set")
     login_session['user_id'] = user_id
     output = ''
     output += '<h1>Welcome, '
@@ -211,7 +211,7 @@ def show_city(cityname):
 # WORKING WITH CITIES
 # creating new city
 @app.route("/newcity", methods=["GET", "POST"])
-@login_required
+#@login_required
 def new_city():
     if request.method == "POST":
         # checking if the form is filled out
@@ -244,8 +244,9 @@ def new_city():
                       city)
                 return redirect(url_for("landing_page"))
     else:
+        print ("get request über /newcity")
         return render_template("new_city.html", login_session=login_session)
-
+        
 
 # Deleting a city and all attractions
 @app.route("/catalog/<path:city>/delete", methods=["GET", "POST"])
